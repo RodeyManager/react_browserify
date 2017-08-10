@@ -1,20 +1,21 @@
 'use strict';
 
 const Hello = require('../../components/hello.jsx');
+const AppService = require('../../services/app.service');
 
 ReactDOM.render(<Hello />, document.getElementById('hello'));
 
-let textAjax = APPModel.test({ name: 'gupack' }, { method: 'POST' });
-textAjax.then(res => {
-    console.log(res);
+AppService.test({ name: 'gupack' }, { method: 'POST' })
+.then(res => {
+    console.log(res.data);
 }).catch(err => {
     console.log(err);
 });
 
-APPModel.test.get().then(res => {
-    console.log(res)
+AppService.test.get().then(res => {
+    console.log(res.data)
 });
 
-APPModel.test.post().then(res => {
-    console.log(res)
+AppService.test.post().then(res => {
+    console.log(res.data)
 });

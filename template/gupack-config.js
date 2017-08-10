@@ -1,15 +1,14 @@
 'use strict';
 
 const
-    util         = require('util'),
     path         = require('path'),
-    fs           = require('fs'),
     browserify   = require('browserify'),
     vfs          = require('vinyl-fs'),
     mps          = require('map-stream'),
     sourceStream = require('vinyl-source-stream'),
     babelify     = require('babelify'),
     reactify     = require('reactify'),
+    uglifyify    = require('uglifyify'),
     env          = require('./config/app-env');
 
 const
@@ -62,21 +61,6 @@ module.exports      =  {
             watch: ['assets/css/**/*']
         },
 
-        'build.app.js': {
-            src: [
-                env.configPath,
-                'config/app-api.js',
-                'modules/main.js',
-                'modules/model.js',
-                'modules/view.js'
-            ],
-            dest: 'modules',
-            loader: util._extend({
-                'gulp-concat': 'app.js',
-                'gulp-babel': gulpBabel()
-            }, jsLoaders())
-        },
-
         'build.assets': {
             src: 'assets/{fonts,images,js,libs}/**/*',
             filters: [],
@@ -89,7 +73,6 @@ module.exports      =  {
             filters: [],
             rely: [
                 'build.assets',
-                'build.app.js',
                 'build.jsViews'
             ],
             dest: 'views',
@@ -105,25 +88,37 @@ module.exports      =  {
             src: 'modules/**/*View.js',
             dest: 'modules',
             //依赖task列表
-            rely: ['build.assets', 'build.app.js'],
+            rely: ['build.assets'],
             loader: function(done){
                 // console.log(this);
                 vfs.src(this.src).pipe(mps( (file, next) => {
                     let info = path.parse(file.path);
                     let dist = path.resolve(this.dest, '../', path.relative(this.sourceDir, info.dir));
-                    browserify({ debug: !env.isIf })
+                    let bw = browserify({ debug: !env.isIf })
                         .add(file.path)
-                        .external(['react', 'jquery'])
+                        .external(['react', 'react-dom', 'jquery', 'axios'])
                         .transform(reactify)
-                        .transform(babelify.configure({ presets: ['es2015', 'es2016', 'stage-2'] }))
-                        .bundle()
-                        .pipe(sourceStream(info.base))
-                        .pipe(vfs.dest(dist));
+                        .transform(babelify.configure({
+                            presets: ['es2015', 'es2016', 'stage-2'],
+                            compact: true
+                        }));
+
+                    if(env.isProduction){
+                        bw = bw.transform(uglifyify, {
+                            global: true,
+                            sourceMap: false
+                        });
+                    }
+
+                    bw.bundle()
+                    .pipe(sourceStream(info.base))
+                    .pipe(vfs.dest(dist));
                 } ));
 
                 return this.stream;
 
-            }
+            },
+            watch: [ 'assets/js/**/*', 'modules/**/*', 'components/**/*' ]
         }
 
     },
@@ -184,13 +179,4 @@ function recache(path){
         toBase64Limit: 1000,
         basePath: path
     }
-}
-
-function gulpBabel(){
-    return {
-        presets: [ 'es2015', 'es2015', 'stage-2' ],
-        plugins: [
-            'transform-remove-strict-mode'
-        ]
-    };
 }
