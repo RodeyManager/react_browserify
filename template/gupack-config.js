@@ -1,14 +1,8 @@
 'use strict';
 
 const
-    path         = require('path'),
-    browserify   = require('browserify'),
-    vfs          = require('vinyl-fs'),
-    mps          = require('map-stream'),
-    sourceStream = require('vinyl-source-stream'),
     babelify     = require('babelify'),
     reactify     = require('reactify'),
-    uglifyify    = require('uglifyify'),
     env          = require('./config/app-env');
 
 const
@@ -73,7 +67,7 @@ module.exports      =  {
             filters: [],
             rely: [
                 'build.assets',
-                'build.jsViews'
+                'build.modules.views'
             ],
             dest: 'views',
             loader: htmlLoaders(),
@@ -84,39 +78,28 @@ module.exports      =  {
             ]
         },
         
-        'build.jsViews': {
+        'build.modules.views': {
             src: 'modules/**/*View.js',
             dest: 'modules',
             //依赖task列表
             rely: ['build.assets'],
-            loader: function(done){
-                // console.log(this);
-                vfs.src(this.src).pipe(mps( (file, next) => {
-                    let info = path.parse(file.path);
-                    let dist = path.resolve(this.dest, '../', path.relative(this.sourceDir, info.dir));
-                    let bw = browserify({ debug: !env.isIf })
-                        .add(file.path)
-                        .external(['react', 'react-dom', 'jquery', 'axios'])
-                        .transform(reactify)
-                        .transform(babelify.configure({
+            loader: {
+                'gulp-browserify-multi-entry': {
+
+                    debug: !env.isIf,
+                    external: ['react', 'react-dom', 'axios'],
+                    transform: [
+                        reactify,
+                        [babelify, {
                             presets: ['es2015', 'es2016', 'stage-2'],
                             compact: true
-                        }));
-
-                    if(env.isProduction){
-                        bw = bw.transform(uglifyify, {
-                            global: true,
-                            sourceMap: false
-                        });
-                    }
-
-                    bw.bundle()
-                    .pipe(sourceStream(info.base))
-                    .pipe(vfs.dest(dist));
-                } ));
-
-                return this.stream;
-
+                        }],
+                    ]
+                },
+                'gulp-jsminer': {
+                    _if: env.isProduction,
+                    preserveComments: '!'
+                }
             },
             watch: [ 'assets/js/**/*', 'modules/**/*', 'components/**/*' ]
         }
@@ -131,7 +114,7 @@ module.exports      =  {
             pass: 'root123',
             port: 22,
             timeout: 50000,
-            // localPath: path.join(__dirname, '../build/**/*'),
+            // localPath: path.join(env.dest.path, '/**/*'),
             // filters: [],
             remotePath: '/var/www/moon',
             onUploadedComplete: function(){
