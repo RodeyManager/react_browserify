@@ -91,7 +91,7 @@ module.exports      =  {
                     transform: [
                         reactify,
                         [babelify, {
-                            presets: ['es2015', 'es2016', 'stage-2'],
+                            presets: ['es2015', 'es2016', 'stage-1'],
                             compact: true
                         }],
                     ]
