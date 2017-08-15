@@ -88,20 +88,14 @@ module.exports      =  {
 
                     debug: !env.isIf,
                     external: ['react', 'react-dom', 'axios'],
-                    transform: [
-                        reactify,
-                        [babelify, {
-                            presets: ['es2015', 'es2016', 'stage-1'],
-                            compact: true
-                        }],
-                    ]
+                    transform: [ reactify, babelify ]
                 },
                 'gulp-jsminer': {
                     _if: env.isProduction,
                     preserveComments: '!'
                 }
             },
-            watch: [ 'assets/js/**/*', 'modules/**/*', 'components/**/*' ]
+            watch: [ 'assets/js/**/*', 'modules/**/*', 'components/**/*', 'config/**/*', 'services/**/*' ]
         }
 
     },

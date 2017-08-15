@@ -2,8 +2,12 @@
 
 const Hello = require('../../components/hello.jsx');
 const AppService = require('../../services/app.service');
+const TestService = require('../../services/test.service');
 
 ReactDOM.render(<Hello />, document.getElementById('hello'));
+
+let testService = new TestService();
+testService.getTestData().then(data => console.log(data));
 
 AppService.test({ name: 'gupack' }, { method: 'POST' })
 .then(res => {
