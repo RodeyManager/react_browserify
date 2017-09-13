@@ -29,14 +29,14 @@ class Links extends React.Component{
     render(){
         return (
             <div className="links">
-                <a href="https://github.com/RodeyManager/gupack.git/doc/index.html" target="_blank" className="doc">文档</a>
+                <a href="https://github.com/RodeyManager/gupack" target="_blank" className="doc">文档</a>
                 <a href="javascript:void(0)" id="case" onClick={ this.showCaseList }>教程</a>
                 <a href="https://github.com/RodeyManager/gupack.git" target="_blank" className="fa fa-github">GitHub</a>
                 <ul className="case" style={{ display: this.state.toggleCase ? 'block' : 'none' }}>
                     <li><a href="https://github.com/RodeyManager/gupack_simple" target="_blank">ES6 + jQuery</a></li>
-                    <li><a href="https://github.com/RodeyManager/vue_browserify" target="_blank">ES6 + Vue + Browserify</a></li>
-                    <li><a href="https://github.com/RodeyManager/react_browserify" target="_blank">ES6 + React + Browserify</a></li>
-                    <li><a href="https://github.com/RodeyManager/angular_browserify" target="_blank">ES6 + Angular + Browserify</a></li>
+                    <li><a href="https://github.com/RodeyManager/vue_browserify" target="_blank">Vue + Browserify</a></li>
+                    <li><a href="https://github.com/RodeyManager/react_browserify" target="_blank">React + Browserify</a></li>
+                    <li><a href="https://github.com/RodeyManager/angular_browserify" target="_blank">Angular + Browserify</a></li>
                 </ul>
             </div>
         );

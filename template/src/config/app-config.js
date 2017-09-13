@@ -4,18 +4,15 @@ const API = require('./api');
 
 const ENV = 'local';
 const protocolReg = /^(https?:)?\/\//i;
-let time = ENV === 'local' || ENV === 'dev' ? 5 : 60;
-let debug = ENV !== 'prd';
-let apiSuffix = ENV === 'local' ? '.json' : '';
 
 let App = {
 
     // 接口host
     ServerHost: getServerHost(),
     method: 'POST',
-    sendTime: time,
-    debug: debug,
-    apiSuffix: apiSuffix,
+    sendTime: ENV === 'local' || ENV === 'dev' ? 5 : 60,
+    debug: ENV !== 'prd',
+    apiSuffix: ENV === 'local' ? '.json' : '',
 
     webServiceUrls: API,
     getWebServiceUrl: function(name, host){
@@ -31,9 +28,13 @@ let App = {
 
 function getServerHost(){
     return ENV === 'local' ? '../../src/mockData/' :
-            ENV === 'dev' ? 'http://192.168.1.100:9002/app' :
+            ENV === 'dev' ? getDevHost() :
                 ENV === 'stg' ? 'test-app/' :
                     ENV === 'prd' ? 'app/' : '';
+}
+
+function getDevHost(){
+    return 'http://192.168.1.100:9002/app'; //(Rodey Luo)
 }
 
 module.exports = App;
