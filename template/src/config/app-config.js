@@ -1,11 +1,10 @@
-'use strict';
 
-const API = require('./api');
+import API from './api';
 
 const ENV = 'local';
 const protocolReg = /^(https?:)?\/\//i;
 
-let App = {
+const App = {
 
     // 接口host
     ServerHost: getServerHost(),
@@ -37,4 +36,5 @@ function getDevHost(){
     return 'http://192.168.1.100:9002/app'; //(Rodey Luo)
 }
 
-module.exports = App;
+// module.exports = App;
+export default App;

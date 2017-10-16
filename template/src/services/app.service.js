@@ -1,6 +1,5 @@
-'use strict';
 
-const App = require('../config/app-config');
+import App from '../config/app-config';
 
 const defaultConfig = {
     baseURI: App.getHosts(),
@@ -58,5 +57,4 @@ class AppService{
     }
 
 }
-
-module.exports = AppService.getInstance();
+export default AppService.getInstance();

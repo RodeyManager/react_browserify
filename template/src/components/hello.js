@@ -1,7 +1,9 @@
-const Logo = require('./logo.jsx');
-const Links = require('./links.jsx');
 
-class Hello extends React.Component{
+import Logo from './logo';
+import Links from './links';
+
+
+export default class Hello extends React.Component{
     constructor(props){
         super(props);
     }
@@ -18,5 +20,3 @@ class Hello extends React.Component{
 Hello.defaultProps = {
     message: 'Hello World'
 };
-
-module.exports = Hello;

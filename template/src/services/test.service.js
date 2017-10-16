@@ -1,9 +1,7 @@
-'use strict';
 
-const
-	AppService = require('./app.service');
+import AppService from './app.service';
 
-class TestService{
+export default class TestService{
 	constructor(){}
 
 	getTestData(){
@@ -19,5 +17,3 @@ class TestService{
 	}
 
 }
-
-module.exports = TestService;

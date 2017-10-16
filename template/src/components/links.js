@@ -1,5 +1,6 @@
 
-class Links extends React.Component{
+
+export default class Links extends React.Component{
 
     constructor(props){
         super(props);
@@ -43,5 +44,3 @@ class Links extends React.Component{
     }
 
 }
-
-module.exports = Links;

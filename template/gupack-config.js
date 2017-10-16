@@ -1,8 +1,6 @@
 'use strict';
 
 const
-    babelify     = require('babelify'),
-    reactify     = require('reactify'),
     env          = require('./config/app-env');
 
 const
@@ -34,6 +32,7 @@ module.exports      =  {
     //     ]
     // },
     port: 3000,
+    sport: 10030,
     // task任务列表
     buildTasks: {
         // ---说明：单个任务配置
@@ -55,9 +54,23 @@ module.exports      =  {
             watch: ['assets/css/**/*']
         },
 
+        'build.lib.js': {
+            src: [
+                '../node_modules/axios/dist/axios.min.js',
+                '../node_modules/react/umd/react.production.min.js',
+                '../node_modules/react-dom/umd/react-dom.production.min.js'
+            ],
+            dest: 'assets/js',
+            loader: Object.assign({
+                'gulp-concat': 'libs.js'
+            }, jsLoaders())
+        },
+
         'build.assets': {
             src: 'assets/{fonts,images,js,libs}/**/*',
-            filters: [],
+            filters: [
+                'assets/js/libs.js'
+            ],
             dest: 'assets',
             loader: jsLoaders()
         },
@@ -66,7 +79,7 @@ module.exports      =  {
             src: ['views/**/*.html'],
             filters: [],
             rely: [
-                'build.assets',
+                'build.css',
                 'build.modules.views'
             ],
             dest: 'views',
@@ -82,13 +95,10 @@ module.exports      =  {
             src: 'modules/**/*View.js',
             dest: 'modules',
             //依赖task列表
-            rely: ['build.assets'],
+            rely: ['build.assets', 'build.lib.js'],
             loader: {
                 'gulp-browserify-multi-entry': {
-
-                    debug: !env.isIf,
-                    external: ['react', 'react-dom', 'axios'],
-                    transform: [ reactify, babelify ]
+                    debug: !env.isIf
                 },
                 'gulp-jsminer': {
                     _if: env.isProduction,

@@ -1,5 +1,5 @@
 
 // API 接口定义
-module.exports = {
+export default {
     test                : 'test'
 };

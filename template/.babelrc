@@ -1,4 +1,9 @@
 {
-    "presets": ["es2015", "es2016", "stage-1"],
-    "compact": true
+    "presets": ["env", "react"],
+    "compact": true,
+    "plugins": [
+        "add-module-exports",
+        "transform-export-extensions",
+        "babel-plugin-transform-es2015-modules-commonjs"
+    ]
 }

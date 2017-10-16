@@ -1,8 +1,7 @@
-'use strict';
 
-const Hello = require('../../components/hello.jsx');
-const AppService = require('../../services/app.service');
-const TestService = require('../../services/test.service');
+import Hello from '../../components/hello';
+import AppService from '../../services/app.service';
+import TestService from '../../services/test.service';
 
 ReactDOM.render(<Hello />, document.getElementById('hello'));
 
